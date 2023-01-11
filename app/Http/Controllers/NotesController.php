@@ -46,7 +46,7 @@ class NotesController extends Controller
 
         $note->save();
 
-        return response()->json($note);
+        return response()->json($note)->setStatusCode(201);
     }
 
     /**
@@ -95,10 +95,19 @@ class NotesController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Notes  $notes
-     * @return \Illuminate\Http\Response
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(Notes $notes)
+    public function destroy(int $id)
     {
-        //
+        $note = Notes::find($id);
+
+        if ($note) {
+            $note->delete();
+            return response()->json([])->setStatusCode(200);
+        }
+        else {
+            return response()->json([])->setStatusCode(404);
+        }
     }
 }
