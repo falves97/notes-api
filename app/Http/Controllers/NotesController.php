@@ -53,11 +53,12 @@ class NotesController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\Notes  $notes
-     * @return \Illuminate\Http\Response
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function show(Notes $notes)
+    public function show(int $id)
     {
-        //
+        return response()->json(Notes::findOrFail($id));
     }
 
     /**
