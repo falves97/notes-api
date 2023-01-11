@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class UpdateNotesRequest extends FormRequest
 {
@@ -13,7 +15,7 @@ class UpdateNotesRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,10 +23,29 @@ class UpdateNotesRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            //
+            'title'       => 'required|unique:notes|max:255',
+            'description' => 'required'
+        ];
+    }
+
+    protected function failedValidation( Validator $validator ) {
+        throw new HttpResponseException(
+            response()->json( [
+                'success' => false,
+                'message' => 'Validation errors',
+                'data'    => $validator->errors()
+            ] )->setStatusCode( 422 )
+        );
+    }
+
+    public function messages() {
+        return [
+            "title.required"       => "Title is required",
+            "title.unique"         => "Title most to be unique",
+            "title.max"            => "Title must be a maximum of 255 characters",
+            "description.required" => "Description is required"
         ];
     }
 }

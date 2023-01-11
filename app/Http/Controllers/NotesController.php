@@ -77,11 +77,18 @@ class NotesController extends Controller
      *
      * @param  \App\Http\Requests\UpdateNotesRequest  $request
      * @param  \App\Models\Notes  $notes
-     * @return \Illuminate\Http\Response
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(UpdateNotesRequest $request, Notes $notes)
+    public function update(UpdateNotesRequest $request, int $id)
     {
-        //
+        $note = Notes::firstOrNew(['id' => $id]);
+
+        $note->title = $request->title;
+        $note->description = $request->description;
+
+        $note->save();
+        return response()->json($note);
     }
 
     /**
