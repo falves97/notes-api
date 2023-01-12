@@ -27,4 +27,4 @@ Route::controller( AuthController::class )->group( function () {
     Route::post( '/refresh', 'refresh' );
 } );
 
-Route::apiResource( 'notes', NotesController::class );
+Route::middleware( 'auth:api' )->apiResource( 'notes', NotesController::class );
