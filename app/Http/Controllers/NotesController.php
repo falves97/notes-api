@@ -79,7 +79,11 @@ class NotesController extends Controller {
      * @return \Illuminate\Http\JsonResponse
      */
     public function update( UpdateNotesRequest $request, int $id ) {
-        $note = Notes::firstOrNew( [ 'id' => $id ] );
+        if(Auth::user()->cannot('update', Notes::find($id))) {
+            abort(403);
+        }
+
+        $note = Notes::find($id);
 
         $note->title       = $request->title;
         $note->description = $request->description;
@@ -97,6 +101,10 @@ class NotesController extends Controller {
      * @return \Illuminate\Http\JsonResponse
      */
     public function destroy( int $id ) {
+        if(Auth::user()->cannot('update', Notes::find($id))) {
+            abort(403);
+        }
+
         $note = Notes::find( $id );
 
         if ( $note ) {
