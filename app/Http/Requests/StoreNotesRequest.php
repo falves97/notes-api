@@ -5,6 +5,8 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
 
 class StoreNotesRequest extends FormRequest {
     /**
@@ -23,7 +25,11 @@ class StoreNotesRequest extends FormRequest {
      */
     public function rules() {
         return [
-            'title'       => 'required|unique:notes|max:255',
+            'title'       => [
+                'required',
+                'string:255',
+                Rule::unique('notes')->where(fn ($query) => $query->where('user_id', Auth::id()))
+            ],
             'description' => 'required'
         ];
     }

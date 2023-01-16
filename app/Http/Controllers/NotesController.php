@@ -15,7 +15,8 @@ class NotesController extends Controller {
      * @return \Illuminate\Http\JsonResponse
      */
     public function index() {
-        return response()->json( Notes::all() );
+
+        return response()->json( Notes::whereBelongsTo(Auth::user())->get());
     }
 
     /**
